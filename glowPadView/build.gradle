@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+    namespace 'com.fima.glowpadview'
+    compileSdkVersion 32
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 32
+    }
+
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+
+    publishing {
+        singleVariant("release") {}
+    }
+}
+
+dependencies {}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            repositories.maven {
+                url 'https://maven.andob.info/repository/open_source/'
+                credentials {
+                    username "$System.env.MAVEN_PUBLISH_USERNAME"
+                    password "$System.env.MAVEN_PUBLISH_PASSWORD"
+                }
+            }
+
+            release(MavenPublication) {
+                from components.release
+                groupId 'ro.andob.glowpadview'
+                artifactId 'glowpadview'
+                version '2.0.2'
+            }
+        }
+    }
+}
