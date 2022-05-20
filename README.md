@@ -3,7 +3,7 @@ GlowPadView Library
   
 The GlowPadView library is the perfect Swipe-To-Act nostalgia widget! Android Ice Cream Sandwich's Lock Ring (way of screen-unlocking and alarm dismissing), now extended to be imported on any modern Android project.
 
-![Example image](https://raw.githubusercontent.com/sachin1092/GlowPadView/master/example.png)
+![Example image](https://raw.githubusercontent.com/andob/GlowPadView/master/example.png)
 
 
 Import it with
@@ -17,7 +17,7 @@ repositories {
 
 ```
 dependencies {
-    implementation 'com.fima.glowpadview:glowpadview:2.0.1'
+    implementation 'ro.andob.glowpadview:glowpadview:2.0.2'
 }
 ```
 

@@ -36,9 +36,9 @@ project.afterEvaluate {
 
             release(MavenPublication) {
                 from components.release
-                groupId 'com.fima.glowpadview'
+                groupId 'ro.andob.glowpadview'
                 artifactId 'glowpadview'
-                version '2.0.1'
+                version '2.0.2'
             }
         }
     }
