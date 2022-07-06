@@ -3,10 +3,10 @@ apply plugin: 'maven-publish'
 
 android {
     namespace 'com.fima.glowpadview'
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
     }
 
     buildTypes {
@@ -38,7 +38,7 @@ project.afterEvaluate {
                 from components.release
                 groupId 'ro.andob.glowpadview'
                 artifactId 'glowpadview'
-                version '2.0.2'
+                version '2.0.3'
             }
         }
     }
