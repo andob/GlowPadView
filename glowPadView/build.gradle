@@ -21,7 +21,9 @@ android {
     }
 }
 
-dependencies {}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+}
 
 project.afterEvaluate {
     publishing {
@@ -38,7 +40,7 @@ project.afterEvaluate {
                 from components.release
                 groupId 'ro.andob.glowpadview'
                 artifactId 'glowpadview'
-                version '2.0.3'
+                version '2.0.4'
             }
         }
     }

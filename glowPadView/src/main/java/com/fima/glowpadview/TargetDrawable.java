@@ -16,11 +16,14 @@
 
 package com.fima.glowpadview;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 public class TargetDrawable {
     private static final String TAG = "TargetDrawable";
@@ -81,20 +84,20 @@ public class TargetDrawable {
      * container. The framework version relies on private api's to get the count from
      * StateListDrawable.
      *
-     * @param res
+     * @param context
      * @param resId
      * @param count The number of drawables in the resource.
      */
-    public TargetDrawable(Resources res, int resId, int count) {
+    public TargetDrawable(Context context, int resId, int count) {
         mResourceId = resId;
-        setDrawable(res, resId);
+        setDrawable(context, resId);
         mNumDrawables = count;
     }
 
-    public void setDrawable(Resources res, int resId) {
+    public void setDrawable(Context context, int resId) {
         // Note we explicitly don't set mResourceId to resId since we allow the drawable to be
         // swapped at runtime and want to re-use the existing resource id for identification.
-        Drawable drawable = resId == 0 ? null : res.getDrawable(resId);
+        Drawable drawable = resId == 0 ? null : ContextCompat.getDrawable(context, resId);
         // Mutate the drawable so we can animate shared drawable properties.
         mDrawable = drawable != null ? drawable.mutate() : null;
         resizeDrawables();

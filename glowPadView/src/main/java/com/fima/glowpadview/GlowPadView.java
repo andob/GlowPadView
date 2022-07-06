@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationAttributes;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -233,10 +234,10 @@ public class GlowPadView extends View {
 		mFeedbackCount = a.getInt(R.styleable.GlowPadView_feedbackCount,
 				mFeedbackCount);
 		TypedValue handle = a.peekValue(R.styleable.GlowPadView_handleDrawable);
-		mHandleDrawable = new TargetDrawable(res,
+		mHandleDrawable = new TargetDrawable(getContext(),
 				handle != null ? handle.resourceId : 0, 2);
 		mHandleDrawable.setState(TargetDrawable.STATE_INACTIVE);
-		mOuterRing = new TargetDrawable(res, getResourceId(a,
+		mOuterRing = new TargetDrawable(getContext(), getResourceId(a,
 				R.styleable.GlowPadView_outerRingDrawable), 1);
 
 		mAlwaysTrackFinger = a.getBoolean(
@@ -573,7 +574,10 @@ public class GlowPadView extends View {
 	@SuppressLint("MissingPermission")
 	private void vibrate() {
 		if (mVibrator != null) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				mVibrator.vibrate(VibrationEffect.createOneShot(mVibrationDuration, VibrationEffect.DEFAULT_AMPLITUDE),
+					new VibrationAttributes.Builder().setUsage(VibrationAttributes.USAGE_HARDWARE_FEEDBACK).build());
+			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 				mVibrator.vibrate(VibrationEffect.createOneShot(mVibrationDuration, VibrationEffect.DEFAULT_AMPLITUDE));
 			} else {
 				//vibrate() was deprecated since Android O
@@ -590,7 +594,7 @@ public class GlowPadView extends View {
 				count);
 		for (int i = 0; i < count; i++) {
 			TypedValue value = array.peekValue(i);
-			TargetDrawable target = new TargetDrawable(res,
+			TargetDrawable target = new TargetDrawable(getContext(),
 					value != null ? value.resourceId : 0, 3);
 			drawables.add(target);
 		}
@@ -1272,7 +1276,7 @@ public class GlowPadView extends View {
 		for (int i = 0; i < size; i++) {
 			final TargetDrawable target = drawables.get(i);
 			if (target != null && target.getResourceId() == existingResourceId) {
-				target.setDrawable(res, newResourceId);
+				target.setDrawable(getContext(), newResourceId);
 				result = true;
 			}
 		}
@@ -1282,60 +1286,6 @@ public class GlowPadView extends View {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Searches the given package for a resource to use to replace the Drawable
-	 * on the target with the given resource id
-	 * 
-	 * @param component
-	 *            of the .apk that contains the resource
-	 * @param name
-	 *            of the metadata in the .apk
-	 * @param existingResId
-	 *            the resource id of the target to search for
-	 * @return true if found in the given package and replaced at least one
-	 *         target Drawables
-	 */
-	public boolean replaceTargetDrawablesIfPresent(ComponentName component,
-			String name, int existingResId) {
-		if (existingResId == 0)
-			return false;
-
-		boolean replaced = false;
-		if (component != null) {
-			try {
-				PackageManager packageManager = getContext()
-						.getPackageManager();
-				// Look for the search icon specified in the activity meta-data
-				Bundle metaData = packageManager.getActivityInfo(component,
-						PackageManager.GET_META_DATA).metaData;
-				if (metaData != null) {
-					int iconResId = metaData.getInt(name);
-					if (iconResId != 0) {
-						Resources res = packageManager
-								.getResourcesForActivity(component);
-						replaced = replaceTargetDrawables(res, existingResId,
-								iconResId);
-					}
-				}
-			} catch (NameNotFoundException e) {
-				Log.w(TAG,
-						"Failed to swap drawable; "
-								+ component.flattenToShortString()
-								+ " not found", e);
-			} catch (Resources.NotFoundException nfe) {
-				Log.w(TAG,
-						"Failed to swap drawable from "
-								+ component.flattenToShortString(), nfe);
-			}
-		}
-		if (!replaced) {
-			// Restore the original drawable
-			replaceTargetDrawables(getContext().getResources(), existingResId,
-					existingResId);
-		}
-		return replaced;
 	}
 
 	public boolean isShowTargetsOnIdle() {

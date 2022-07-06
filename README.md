@@ -17,7 +17,7 @@ repositories {
 
 ```
 dependencies {
-    implementation 'ro.andob.glowpadview:glowpadview:2.0.3'
+    implementation 'ro.andob.glowpadview:glowpadview:2.0.4'
 }
 ```
 
